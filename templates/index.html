@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creative Guru | AI-Powered Product Marketing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                        secondary: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            300: '#86efac',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        },
+                        dark: '#1e293b',
+                        light: '#f8fafc'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.5s ease-out',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(10px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f8fafc;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #4F46E5 0%, #7E22CE 100%);
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        .upload-area {
+            transition: all 0.3s ease;
+        }
+
+        .upload-area:hover,
+        .upload-area.dragover {
+            border-color: #4F46E5;
+            background-color: #f0f9ff;
+        }
+
+        .preview-container {
+            transition: all 0.3s ease;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #4F46E5, #7E22CE);
+            transition: width 0.3s ease;
+        }
+
+        .nav-item:hover::after {
+            width: 100%;
+        }
+
+        .stats-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border: 1px solid #e2e8f0;
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .loading {
+            display: none;
+        }
+
+        .prompt-suggestion {
+            transition: all 0.2s ease;
+        }
+
+        .prompt-suggestion:hover {
+            transform: translateX(5px);
+            background-color: #f1f5f9;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 font-sans">
+    <!-- Header -->
+    <header class="glass-effect fixed w-full top-0 z-50 shadow-md">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="bg-gradient-to-r from-primary-600 to-purple-600 p-2 rounded-lg">
+                    <i class="fas fa-brain text-white text-2xl"></i>
+                </div>
+                <h1
+                    class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-purple-600">
+                    CREATIVE GURU</h1>
+            </div>
+
+            <!-- Desktop Navigation -->
+            <nav class="hidden md:flex items-center space-x-8">
+                <a href="#" class="nav-item font-medium text-dark hover:text-primary-600">Dashboard</a>
+                <a href="#" class="nav-item font-medium text-dark hover:text-primary-600">Templates</a>
+                <a href="#" class="nav-item font-medium text-dark hover:text-primary-600">Analytics</a>
+                <a href="#" class="nav-item font-medium text-dark hover:text-primary-600">Settings</a>
+            </nav>
+
+            <div class="flex items-center space-x-4">
+                <button
+                    class="hidden md:block bg-white text-primary-600 px-4 py-2 rounded-lg font-medium hover:bg-gray-50 transition shadow-sm">Login</button>
+                <button
+                    class="bg-gradient-to-r from-primary-600 to-purple-600 text-white px-4 py-2 rounded-lg font-medium hover:opacity-90 transition shadow-md">Sign
+                    Up</button>
+
+                <!-- Mobile menu button -->
+                <button class="md:hidden text-dark">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container mx-auto px-4 pt-24 pb-12">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            <!-- Left Sidebar -->
+            <div class="lg:col-span-1">
+                <!-- User Profile Card -->
+                <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+                    <div class="flex items-center space-x-4 mb-6">
+                        <div
+                            class="w-16 h-16 bg-gradient-to-r from-primary-100 to-purple-100 rounded-full flex items-center justify-center">
+                            <span class="text-2xl font-bold text-primary-600">JS</span>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-dark">John Smith</h3>
+                            <p class="text-sm text-gray-500">Pro Plan</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 mb-6">
+                        <div class="bg-primary-50 p-3 rounded-lg text-center">
+                            <p class="text-2xl font-bold text-primary-600">12</p>
+                            <p class="text-xs text-gray-600">Projects</p>
+                        </div>
+                        <div class="bg-secondary-50 p-3 rounded-lg text-center">
+                            <p class="text-2xl font-bold text-secondary-600">3</p>
+                            <p class="text-xs text-gray-600">Teams</p>
+                        </div>
+                    </div>
+
+                    <button
+                        class="w-full bg-gray-100 text-dark py-2 rounded-lg font-medium hover:bg-gray-200 transition flex items-center justify-center">
+                        <i class="fas fa-cog mr-2 text-gray-600"></i>
+                        Account Settings
+                    </button>
+                </div>
+
+                <!-- Tools Section -->
+                <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+                    <h2 class="text-xl font-bold text-dark mb-4 flex items-center">
+                        <i class="fas fa-wrench mr-2 text-primary-600"></i>
+                        Ai Tools
+                    </h2>
+                    <div class="space-y-4">
+                        <div class="card-hover bg-light p-4 rounded-lg border border-gray-200 cursor-pointer">
+                            <div class="flex items-center space-x-3">
+                                <div class="bg-primary-100 p-2 rounded-lg">
+                                    <i class="fas fa-image text-primary-600 text-xl"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold">Ai Products Images</h3>
+                                    <p class="text-sm text-gray-600 mt-1">Generate high-quality product images with AI.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Projects -->
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h2 class="text-xl font-bold text-dark mb-4 flex items-center">
+                        <i class="fas fa-history mr-2 text-primary-600"></i>
+                        Recent Projects
+                    </h2>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div>
+                                <h4 class="font-medium">Ecommerce Product Set</h4>
+                                <p class="text-xs text-gray-500">2 days ago</p>
+                            </div>
+                            <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-image text-primary-600"></i>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div>
+                                <h4 class="font-medium">Social Media Ads</h4>
+                                <p class="text-xs text-gray-500">1 week ago</p>
+                            </div>
+                            <div class="w-10 h-10 bg-secondary-100 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-video text-secondary-600"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="lg:col-span-2">
+                <!-- Welcome Banner -->
+                <div class="gradient-bg text-white rounded-xl shadow-md p-6 mb-6 relative overflow-hidden">
+                    <div
+                        class="absolute top-0 right-0 w-32 h-32 bg-white opacity-10 rounded-full -translate-y-16 translate-x-16">
+                    </div>
+                    <div
+                        class="absolute bottom-0 left-0 w-24 h-24 bg-white opacity-10 rounded-full translate-y-12 -translate-x-12">
+                    </div>
+
+                    <div class="relative z-10">
+                        <h2 class="text-2xl font-bold mb-2">Welcome back, John!</h2>
+                        <p class="mb-4 opacity-90">Ready to create stunning product visuals with AI?</p>
+                        <button
+                            class="bg-white text-primary-600 px-4 py-2 rounded-lg font-medium hover:bg-opacity-90 transition">
+                            Start Creating
+                        </button>
+                    </div>
+
+                    <div class="absolute right-6 bottom-6 floating">
+                        <i class="fas fa-rocket text-4xl text-white opacity-80"></i>
+                    </div>
+                </div>
+
+                <!-- Generator Section -->
+                <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+                    <h2 class="text-2xl font-bold text-dark mb-2">All Product Image Generator</h2>
+                    <p class="text-gray-600 mb-6">Create stunning product images with our AI-powered tools</p>
+
+                    <form id="posterForm" enctype="multipart/form-data">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Upload Section -->
+                            <div class="bg-light p-6 rounded-xl">
+                                <h3 class="text-lg font-semibold text-dark mb-4 flex items-center">
+                                    <div class="bg-primary-100 p-2 rounded-lg mr-2">
+                                        <i class="fas fa-upload text-primary-600"></i>
+                                    </div>
+                                    1. Upload Product Image
+                                </h3>
+                                <div class="upload-area border-2 border-dashed border-gray-300 rounded-xl h-60 flex items-center justify-center mb-4 bg-gray-100"
+                                    id="uploadArea">
+                                    <div class="text-center" id="uploadPlaceholder">
+                                        <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-3"></i>
+                                        <p class="text-gray-600 font-medium">Click or drag to upload</p>
+                                        <p class="text-sm text-gray-500 mt-2">SVG, PNG, JPG or GIF (max. 5MB)</p>
+                                    </div>
+                                    <input type="file" class="hidden" id="fileInput" name="product_image"
+                                        accept="image/*">
+                                </div>
+                                <div class="flex items-center text-sm text-gray-500 mb-4">
+                                    <i class="fas fa-info-circle mr-2 text-primary-600"></i>
+                                    <p>For best results, use high-quality product images</p>
+                                </div>
+                            </div>
+
+                            <!-- Preview Section -->
+                            <div class="bg-light p-6 rounded-xl">
+                                <h3 class="text-lg font-semibold text-dark mb-4 flex items-center">
+                                    <div class="bg-primary-100 p-2 rounded-lg mr-2">
+                                        <i class="fas fa-image text-primary-600"></i>
+                                    </div>
+                                    Generated Result
+                                </h3>
+                                <div class="preview-container border-2 border-dashed border-gray-300 rounded-xl h-60 flex items-center justify-center mb-4 bg-gray-100"
+                                    id="previewContainer">
+                                    <div class="text-center">
+                                        <i class="fas fa-image text-3xl text-gray-400 mb-2"></i>
+                                        <p class="text-gray-500">AI-generated image will appear here</p>
+                                    </div>
+                                </div>
+                                <div id="loadingSpinner" class="loading text-center mb-4">
+                                    <i class="fas fa-spinner fa-spin text-2xl text-primary-600 mb-2"></i>
+                                    <p class="text-gray-600">Generating your poster...</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Description Section -->
+                        <div class="mt-6 bg-light p-6 rounded-xl">
+                            <h3 class="text-lg font-semibold text-dark mb-4 flex items-center">
+                                <div class="bg-primary-100 p-2 rounded-lg mr-2">
+                                    <i class="fas fa-align-left text-primary-600"></i>
+                                </div>
+                                2. Describe your product and desired style
+                            </h3>
+
+                            <div class="mb-4">
+                                <p class="text-sm font-medium text-gray-700 mb-2">Prompt Suggestions:</p>
+                                <div class="flex flex-wrap gap-2">
+                                    <span
+                                        class="prompt-suggestion bg-primary-50 text-primary-700 px-3 py-1 rounded-full text-xs cursor-pointer"
+                                        data-prompt="Product photography with a clean white background">White
+                                        Background</span>
+                                    <span
+                                        class="prompt-suggestion bg-primary-50 text-primary-700 px-3 py-1 rounded-full text-xs cursor-pointer"
+                                        data-prompt="Lifestyle shot with natural lighting in a home environment">Lifestyle
+                                        Shot</span>
+                                    <span
+                                        class="prompt-suggestion bg-primary-50 text-primary-700 px-3 py-1 rounded-full text-xs cursor-pointer"
+                                        data-prompt="Modern minimalist product display with soft shadows">Minimalist
+                                        Style</span>
+                                    <span
+                                        class="prompt-suggestion bg-primary-50 text-primary-700 px-3 py-1 rounded-full text-xs cursor-pointer"
+                                        data-prompt="E-commerce style product image with professional lighting">E-commerce
+                                        Style</span>
+                                </div>
+                            </div>
+
+                            <textarea name="description"
+                                class="w-full h-32 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-600 focus:border-transparent"
+                                placeholder="Describe your product and how you want it to appear. For example: 'A premium coffee mug on a wooden table with morning sunlight'"></textarea>
+
+                            <div class="mt-4 grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Style</label>
+                                    <select name="style"
+                                        class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-600 focus:border-transparent">
+                                        <option>Modern</option>
+                                        <option>Vintage</option>
+                                        <option>Minimalist</option>
+                                        <option>Luxury</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Background</label>
+                                    <select name="background"
+                                        class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-600 focus:border-transparent">
+                                        <option>White</option>
+                                        <option>Gradient</option>
+                                        <option>Outdoor</option>
+                                        <option>Studio</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <button type="submit"
+                                class="gradient-bg text-white w-full py-3 rounded-lg font-medium hover:opacity-90 transition mt-6 flex items-center justify-center">
+                                <i class="fas fa-magic mr-2"></i>
+                                Generate Product Image
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Stats Section -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    <div class="stats-card rounded-xl p-5 text-center">
+                        <div
+                            class="bg-primary-100 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="fas fa-image text-primary-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-dark">1,248</h3>
+                        <p class="text-gray-600">Images Generated</p>
+                    </div>
+
+                    <div class="stats-card rounded-xl p-5 text-center">
+                        <div
+                            class="bg-secondary-100 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="fas fa-users text-secondary-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-dark">563</h3>
+                        <p class="text-gray-600">Active Users</p>
+                    </div>
+
+                    <div class="stats-card rounded-xl p-5 text-center">
+                        <div class="bg-purple-100 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="fas fa-star text-purple-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-dark">94%</h3>
+                        <p class="text-gray-600">Satisfaction Rate</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Sidebar -->
+            <div class="lg:col-span-1">
+                <!-- Tech Stack -->
+                <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+                    <h3 class="text-lg font-semibold text-dark mb-4">Technology Stack</h3>
+                    <div class="flex flex-wrap gap-3">
+                        <span class="bg-blue-100 text-blue-800 px-3 py-2 rounded-lg text-sm font-medium">Next.js</span>
+                        <span class="bg-blue-100 text-blue-800 px-3 py-2 rounded-lg text-sm font-medium">React</span>
+                        <span
+                            class="bg-blue-100 text-blue-800 px-3 py-2 rounded-lg text-sm font-medium">TypeScript</span>
+                        <span
+                            class="bg-yellow-100 text-yellow-800 px-3 py-2 rounded-lg text-sm font-medium">Firebase</span>
+                        <span
+                            class="bg-purple-100 text-purple-800 px-3 py-2 rounded-lg text-sm font-medium">ImageKit</span>
+                        <span class="bg-green-100 text-green-800 px-3 py-2 rounded-lg text-sm font-medium">Python</span>
+                        <span class="bg-red-100 text-red-800 px-3 py-2 rounded-lg text-sm font-medium">Flask</span>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+                    <h3 class="text-lg font-semibold text-dark mb-4">Recent Activity</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <div class="bg-primary-100 p-2 rounded-lg mr-3">
+                                <i class="fas fa-image text-primary-600"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium">Generated product image</p>
+                                <p class="text-sm text-gray-500">2 hours ago</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start">
+                            <div class="bg-secondary-100 p-2 rounded-lg mr-3">
+                                <i class="fas fa-download text-secondary-600"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium">Downloaded project assets</p>
+                                <p class="text-sm text-gray-500">Yesterday</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start">
+                            <div class="bg-purple-100 p-2 rounded-lg mr-3">
+                                <i class="fas fa-share-alt text-purple-600"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium">Shared project with team</p>
+                                <p class="text-sm text-gray-500">2 days ago</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upgrade Card -->
+                <div class="gradient-bg text-white rounded-xl shadow-md p-6">
+                    <h3 class="text-lg font-semibold mb-3">Upgrade to Pro</h3>
+                    <p class="text-sm opacity-90 mb-4">Unlock all features and generate unlimited product images</p>
+                    <ul class="text-sm space-y-2 mb-5">
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle mr-2 text-secondary-400"></i>
+                            <span>Unlimited AI generations</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle mr-2 text-secondary-400"></i>
+                            <span>Priority support</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle mr-2 text-secondary-400"></i>
+                            <span>Commercial license</span>
+                        </li>
+                    </ul>
+                    <button
+                        class="bg-white text-primary-600 w-full py-3 rounded-lg font-medium hover:bg-opacity-90 transition">
+                        Upgrade Now
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Creative Guru</h4>
+                    <p class="text-gray-400">AI-powered product image and video generation for modern marketers.</p>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Product</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Features</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Pricing</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Templates</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Case Studies</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Resources</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Blog</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Documentation</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Support</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">API</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Connect</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition"><i
+                                class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition"><i
+                                class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition"><i
+                                class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>© 2023 Creative Guru. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Enhanced JavaScript for file upload and preview
+        document.addEventListener('DOMContentLoaded', function () {
+            const uploadArea = document.getElementById('uploadArea');
+            const uploadPlaceholder = document.getElementById('uploadPlaceholder');
+            const fileInput = document.getElementById('fileInput');
+            const previewContainer = document.getElementById('previewContainer');
+            const posterForm = document.getElementById('posterForm');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const promptSuggestions = document.querySelectorAll('.prompt-suggestion');
+
+            // File upload functionality
+            uploadArea.addEventListener('click', function () {
+                fileInput.click();
+            });
+
+            uploadArea.addEventListener('dragover', function (e) {
+                e.preventDefault();
+                this.classList.add('dragover');
+            });
+
+            uploadArea.addEventListener('dragleave', function () {
+                this.classList.remove('dragover');
+            });
+
+            uploadArea.addEventListener('drop', function (e) {
+                e.preventDefault();
+                this.classList.remove('dragover');
+
+                if (e.dataTransfer.files.length) {
+                    fileInput.files = e.dataTransfer.files;
+                    handleFile(e.dataTransfer.files[0]);
+                }
+            });
+
+            fileInput.addEventListener('change', function () {
+                if (this.files.length) {
+                    handleFile(this.files[0]);
+                }
+            });
+
+            function handleFile(file) {
+                // Check file size (max 5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('File is too large. Please select a file smaller than 5MB.');
+                    return;
+                }
+
+                // Check file type
+                if (!file.type.match('image.*')) {
+                    alert('Please select an image file.');
+                    return;
+                }
+
+                // Preview image in the upload area
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    uploadPlaceholder.innerHTML = `
+                        <div class="w-full h-full flex items-center justify-center">
+                            <img src="${e.target.result}" class="max-h-full max-w-full rounded-lg" alt="Preview">
+                        </div>
+                    `;
+                };
+                reader.readAsDataURL(file);
+            }
+
+            // Prompt suggestions
+            promptSuggestions.forEach(suggestion => {
+                suggestion.addEventListener('click', function () {
+                    const textarea = document.querySelector('textarea[name="description"]');
+                    textarea.value = this.getAttribute('data-prompt');
+                });
+            });
+
+            // Form submission for poster generation
+            posterForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                // Check if an image is uploaded
+                if (!fileInput.files.length) {
+                    alert('Please upload an image first.');
+                    return;
+                }
+
+                // Show loading spinner
+                loadingSpinner.style.display = 'block';
+
+                // Create FormData object
+                const formData = new FormData(this);
+
+                // Send AJAX request to Flask backend
+                fetch('/generate_poster', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Hide loading spinner
+                        loadingSpinner.style.display = 'none';
+
+                        if (data.success) {
+                            // Display the generated poster
+                            previewContainer.innerHTML = `
+    <div class="w-full h-full flex items-center justify-center relative">
+        <img src="${data.image_url}" class="max-h-full max-w-full rounded-lg shadow-lg" alt="Generated Poster">
+        <a href="${data.image_url}" download="poster.png"
+            class="absolute bottom-3 right-3 bg-primary-600 text-white px-3 py-1.5 rounded-lg text-sm shadow-md hover:bg-primary-700 transition flex items-center">
+            <i class="fas fa-download mr-1"></i> Download
+        </a>
+    </div>
+`;
+
+                            alert(data.message);
+                        } else {
+                            alert('Error: ' + data.error);
+                        }
+                    })
+                    .catch(error => {
+                        // Hide loading spinner
+                        loadingSpinner.style.display = 'none';
+                        console.error('Error:', error);
+                        alert('An error occurred while generating the poster.');
+                    });
+            });
+        });
+    </script>
+</body>
+
+</html>
