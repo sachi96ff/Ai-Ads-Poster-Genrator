@@ -16,7 +16,7 @@ app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
 app.config['GENERATED_FOLDER'] = 'generated'
 
 # Configure Google Gemini API
-API_KEY = "AIzaSyBMS4DnmOwG1BM8S_AKzMr_Skulu1qzUbs"
+API_KEY = ""
 client = genai.Client(api_key=API_KEY)
 
 def allowed_file(filename):
